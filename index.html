@@ -1,71 +1,136 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-  </head>
-  <body>
-    <script>
-        d3.csv("all.csv").then( (data) => {
-          console.log(data);
 
-          const width = 1000;
-          const height = 500;
-          const margin = { "top": 10, "right": 10, "bottom": 40, "left":60};
-          const chartWidth = width - margin.left - margin.right;
-          const chartHeight = height - margin.top - margin.bottom
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
 
-          var svg = d3.select("body")
-                      .append("svg")
-                      .attr("width", width)
-                      .attr("height", height);
+<body>
+  <script>
 
-          data.forEach( (d, i) => {
-            d['artist age'] = Number(d['artist age']);
-          });
+    //chart 1
+    d3.csv("all.csv").then((data) => {
+      console.log(data);
 
-          let annotations = svg.append("g").attr("id","annotations");
-          let chartArea = svg.append("g").attr("id","points")
-                          .attr("transform","translate("+margin.left+","+margin.top+")");
+      const width = 1000;
+      const height = 500;
+      const margin = { "top": 10, "right": 10, "bottom": 40, "left": 60 };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom
 
-          const ageExtent = d3.extent(data, d => d['artist age'] );
-          const ageScale = d3.scaleLinear().domain(ageExtent).range([chartHeight, 0])
-          let leftAxis = d3.axisLeft(ageScale).tickFormat(d3.format(''));
-          let leftGridlines = d3.axisLeft(ageScale)
-                                .tickSize(-chartWidth-10)
-                                .tickFormat("")
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
-          annotations.append("g")
-                     .attr("class", "y axis")
-                     .attr("transform",`translate(${margin.left-10},${margin.top})`)
-                     .call(leftAxis)
-          annotations.append("g")
-                     .attr("class", "y gridlines")
-                     .attr("transform",`translate(${margin.left-10},${margin.top})`)
-                     .call(leftGridlines);
+      data.forEach((d, i) => {
+        d['artist age'] = Number(d['artist age']);
+      });
 
-          const genres = d3.map(data, d=> d["altered genre"]);
-          const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth])
-                                           .padding(0.05);
+      let annotations = svg.append("g").attr("id", "annotations");
+      let chartArea = svg.append("g").attr("id", "points")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        let bottomAxis = d3.axisBottom(genreScale)
-        let bottomAxisG = annotations.append("g")
-                                     .attr("class", "x axis")
-                                     .attr("transform",`translate(${margin.left},${chartHeight+margin.top+10})`)
-                                     .call(bottomAxis);
+      const ageExtent = d3.extent(data, d => d['artist age']);
+      const ageScale = d3.scaleLinear().domain(ageExtent).range([chartHeight, 0])
+      let leftAxis = d3.axisLeft(ageScale).tickFormat(d3.format(''));
+      let leftGridlines = d3.axisLeft(ageScale)
+        .tickSize(-chartWidth - 10)
+        .tickFormat("")
 
-        console.log(genres)
-        let circles = chartArea.selectAll("circle").data(data)
-                    .join("circle")
-                    .attr("cy", d => ageScale(d['artist age']))
-                    .attr("cx", d => genreScale(d['altered genre']))
-                    .attr("r", d => 3)
-                    .attr("opacity", 0.3)
-                    .style("fill", d => "darkblue")
+      annotations.append("g")
+        .attr("class", "y axis")
+        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+        .call(leftAxis)
+      annotations.append("g")
+        .attr("class", "y gridlines")
+        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+        .call(leftGridlines);
 
-        });
-    </script>
+      const decades = d3.map(data, d => d["decade"]);
+      const decadesScale = d3.scalePoint().domain(decades).range([0, chartWidth])
+        .padding(0.05);
 
-  </body>
+      let bottomAxis = d3.axisBottom(decadesScale)
+      let bottomAxisG = annotations.append("g")
+        .attr("class", "x axis")
+        .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+        .call(bottomAxis);
+
+      let circles = chartArea.selectAll("circle").data(data)
+        .join("circle")
+        .attr("cx", d => decadesScale(d["decade"]))
+        .attr("cy", d => ageScale(d["artist age"]))
+        .attr("r", d => 3)
+        .attr("opacity", 0.3)
+        .style("fill", d => "darkblue")
+    });
+
+
+
+    //chart 2
+    d3.csv("all.csv").then((data) => {
+      console.log(data);
+
+      const width = 1000;
+      const height = 500;
+      const margin = { "top": 10, "right": 10, "bottom": 40, "left": 60 };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom
+
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      data.forEach((d, i) => {
+        d['artist age'] = Number(d['artist age']);
+      });
+
+      let annotations = svg.append("g").attr("id", "annotations");
+      let chartArea = svg.append("g").attr("id", "points")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      const ageExtent = d3.extent(data, d => d['artist age']);
+      const ageScale = d3.scaleLinear().domain(ageExtent).range([chartHeight, 0])
+      let leftAxis = d3.axisLeft(ageScale).tickFormat(d3.format(''));
+      let leftGridlines = d3.axisLeft(ageScale)
+        .tickSize(-chartWidth - 10)
+        .tickFormat("")
+
+      annotations.append("g")
+        .attr("class", "y axis")
+        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+        .call(leftAxis)
+      annotations.append("g")
+        .attr("class", "y gridlines")
+        .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+        .call(leftGridlines);
+
+      const genres = d3.map(data, d => d["altered genre"]);
+      const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth])
+        .padding(0.05);
+
+      let bottomAxis = d3.axisBottom(genreScale)
+      let bottomAxisG = annotations.append("g")
+        .attr("class", "x axis")
+        .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+        .call(bottomAxis);
+
+      console.log(genres)
+      let circles = chartArea.selectAll("circle").data(data)
+        .join("circle")
+        .attr("cy", d => ageScale(d['artist age']))
+        .attr("cx", d => genreScale(d['altered genre']))
+        .attr("r", d => 3)
+        .attr("opacity", 0.3)
+        .style("fill", d => "darkblue")
+
+    });
+  </script>
+
+</body>
+
 </html>
