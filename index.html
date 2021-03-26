@@ -6,6 +6,15 @@
   <title></title>
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <style>
+    /* @font-face {
+      font-family: 'Proxima Nova';
+      src: url('ProximaNova.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    } */
+
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
+
     .gridlines line {
       stroke: lightgray;
     }
@@ -15,19 +24,25 @@
     }
 
     .legend span {
-            margin-right: 15px;
-        }
+      margin-right: 15px;
+    }
 
 
     #linechartLegend {
-            margin-left: 250px;
-            margin-top: 5px;
-        }
+      margin-left: 250px;
+      margin-top: 5px;
+    }
+
+    body {
+      font-family: 'Montserrat', arial;
+      font-size: 14px;
+    }
   </style>
-  <div id="my_dataviz"></div>
+
 </head>
 
 <body>
+
   <svg id="chart3" height="500" width="800"></svg>
   <div id="linechartLegend" class="legend"> </div>
   <script>
@@ -73,6 +88,7 @@
 
       let bottomAxis = d3.axisBottom(decadesScale)
       let bottomAxisG = annotations.append("g")
+      .style("font", "14px Montserrat")
         .attr("class", "x axis")
         .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
         .call(bottomAxis);
@@ -255,6 +271,7 @@
 
       let bottomAxis = d3.axisBottom(genreScale)
       let bottomAxisG = annotations.append("g")
+      .style("font", "14px Montserrat")
         .attr("class", "x axis")
         .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
         .call(bottomAxis);
@@ -275,8 +292,8 @@
       .then((data) => {
 
         const svg = d3.select("svg#chart3");
-                    const width = svg.attr("width");
-                    const height = svg.attr("height");
+        const width = svg.attr("width");
+        const height = svg.attr("height");
         console.log(data);
         const margin = { top: 10, right: 20, bottom: 50, left: 50 };
         const chartWidth = width - margin.left - margin.right;
@@ -312,6 +329,7 @@
           .tickSize(-chartHeight - 10)
           .tickFormat('')
         annotations.append("g")
+          .style("font", "14px Montserrat")
           .attr("class", "x axis")
           .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
           .call(bottomAxis);
@@ -328,6 +346,7 @@
           .tickSize(-chartWidth - 10)
           .tickFormat("")
         annotations.append("g")
+        .style("font", "14px Montserrat")
           .attr("class", "y axis")
           .attr("transform", `translate(${margin.left - 10},${margin.top})`)
           .call(leftAxis)
@@ -425,8 +444,8 @@
           .attr("x", width / 2)
           .attr("y", 20)
           .style("text-anchor", "middle")
-          .style("font-family", "Impact")
-          .style("font-size", 20)
+          // .style("font-family", "Impact")
+          // .style("font-size", 20)
           .text("SONG GENRES BY DECADE");
 
         //x axis labels
@@ -434,8 +453,8 @@
           .attr("x", width / 2)
           .attr("y", height)
           .style("text-anchor", "middle")
-          .style("font-family", "Trebuchet MS")
-          .style("font-size", 14)
+          // .style("font-family", "Trebuchet MS")
+          // .style("font-size", 14)
           .text("Decade");
 
         //y axis label
@@ -445,8 +464,8 @@
           .attr("x", 0 - (height / 2))
           .attr("dy", "1em")
           .style("text-anchor", "middle")
-          .style("font-family", "Trebuchet MS")
-          .style("font-size", 14)
+          // .style("font-family", "Trebuchet MS")
+          // .style("font-size", 14)
           .text("Song Count");
 
         //legend
@@ -457,21 +476,21 @@
           .style("font-family", "Trebuchet MS")
           .style("font-size", 14);
 
-          d3.select("#linechartLegend")
+        d3.select("#linechartLegend")
           .append("span")
           .text("Pop")
           .style("color", "#ff7f0e")
           .style("font-family", "Trebuchet MS")
           .style("font-size", 14);
 
-          d3.select("#linechartLegend")
+        d3.select("#linechartLegend")
           .append("span")
           .text("Rock")
           .style("color", "#2ca02c")
           .style("font-family", "Trebuchet MS")
           .style("font-size", 14);
 
-          d3.select("#linechartLegend")
+        d3.select("#linechartLegend")
           .append("span")
           .text("Electronic")
           .style("color", "#d62728")
