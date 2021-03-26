@@ -43,31 +43,39 @@
 
 <body>
 
+  </style>
+</head>
+
+<body>
+  <svg id="chart1" height="500" width="800"></svg>
   <svg id="chart3" height="500" width="800"></svg>
   <div id="linechartLegend" class="legend"> </div>
   <script>
+
 
     //chart 1
     d3.csv("all.csv").then((data) => {
       console.log(data);
 
+      const svg = d3.select("svg#chart1");
       const width = 800;
       const height = 500;
       const margin = { "top": 30, "right": 10, "bottom": 50, "left": 60 };
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom
 
-      var svg = d3.select("body")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+      // var svg = d3.select("body")
+      //   .append("svg")
+      //   .attr("width", width)
+      //   .attr("height", height);
 
       let annotations = svg.append("g").attr("id", "annotations");
       let chartArea = svg.append("g").attr("id", "points")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      const ageExtent = d3.extent(data, d => d['artist age']);
-      const ageScale = d3.scaleLinear().domain(ageExtent).range([chartHeight, 0])
+      // const ageExtent = d3.extent(data, d => d['artist age']);
+      // const ageExtent = (10, 70);
+      const ageScale = d3.scaleLinear().domain([0, 70]).range([chartHeight, 0])
       let leftAxis = d3.axisLeft(ageScale).tickFormat(d3.format(''));
       let leftGridlines = d3.axisLeft(ageScale)
         .tickSize(-chartWidth - 10)
@@ -83,8 +91,7 @@
         .call(leftGridlines);
 
       const decades = d3.map(data, d => d["decade"]);
-      const decadesScale = d3.scalePoint().domain(decades).range([0, chartWidth])
-        .padding(0.05);
+      const decadesScale = d3.scalePoint().domain(decades).range([30, chartWidth - 30]);
 
       let bottomAxis = d3.axisBottom(decadesScale)
       let bottomAxisG = annotations.append("g")
@@ -117,7 +124,7 @@
         .text("Artist Age");
 
 
-      //create outliers 
+      //create outliers
       var outliers = []
       data.forEach((d, i) => {
         if (d.decade == "1960" && (d["artist age"] < 17 || d["artist age"] > 33)) {
@@ -166,7 +173,7 @@
       let q1q3 = [{ "q1": 23, "q3": 27, "height": 4 }, { "q1": 26, "q3": 31, "height": 5 }, { "q1": 26, "q3": 35, "height": 9 },
       { "q1": 24, "q3": 32, "height": 8 }, { "q1": 23, "q3": 30, "height": 7 }, { "q1": 22, "q3": 30, "height": 8 }];
 
-      //draw vertical line for whiskers 
+      //draw vertical line for whiskers
       years.forEach((d, i) => {
         chartArea.append("line")
           .attr("x1", decadesScale(d))
@@ -191,8 +198,8 @@
       //draw lower horizontal lines for whiskers
       years.forEach((d, i) => {
         chartArea.append("line")
-          .attr("x1", decadesScale(d) - 15)
-          .attr("x2", decadesScale(d) + 15)
+          .attr("x1", decadesScale(d) - 22)
+          .attr("x2", decadesScale(d) + 22)
           .attr("y1", ageScale(whiskers[i]["lower"]))
           .attr("y2", ageScale(whiskers[i]["lower"]))
           .style("stroke", "black")
@@ -206,17 +213,17 @@
           .attr("x2", decadesScale(d))
           .attr("y1", ageScale(q1q3[i]["q3"]))
           .attr("y2", ageScale(q1q3[i]["q1"]))
-          .style("stroke", "darkblue")
-          .style("stroke-width", 30);
+          .style("stroke", "#1DB954")
+          .style("stroke-width", 44);
       });
 
-      //draw outliers 
+      //draw outliers
       outliers.forEach((d, i) => {
         chartArea.append("circle")
           .attr("cx", decadesScale(d["year"]))
           .attr("cy", ageScale(d["age"]))
           .attr("r", 3)
-          .style("fill", d => "darkblue")
+          .style("fill", d => "#1DB954")
       })
     });
 
@@ -266,8 +273,7 @@
         .call(leftGridlines);
 
       const genres = d3.map(data, d => d["altered genre"]);
-      const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth])
-        .padding(0.05);
+      const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth]);
 
       let bottomAxis = d3.axisBottom(genreScale)
       let bottomAxisG = annotations.append("g")
@@ -316,8 +322,7 @@
         // const yearExtent = d3.extent(data, d => d['year']);
         // const yearScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth]);
         const yearMap = d3.map(data, d => d["year"]);
-        const yearScale = d3.scalePoint().domain(yearMap).range([0, chartWidth])
-          .padding(0.05);
+        const yearScale = d3.scalePoint().domain(yearMap).range([0, chartWidth]);
 
         const genreScale = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -428,7 +433,7 @@
         chartArea.selectAll("circle#path_rock").data(rock_data)
           .join("circle")
           .attr("r", 3)
-          .attr("fill", "#2ca02c")
+          .attr("fill", "#1DB954")
           .attr("cx", d => yearScale(d['year']))
           .attr("cy", d => countScale(d['count']));
 
@@ -486,7 +491,7 @@
         d3.select("#linechartLegend")
           .append("span")
           .text("Rock")
-          .style("color", "#2ca02c")
+          .style("color", "#1DB954")
           .style("font-family", "Trebuchet MS")
           .style("font-size", 14);
 
