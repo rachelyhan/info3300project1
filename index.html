@@ -5,11 +5,31 @@
   <meta charset="utf-8">
   <title></title>
   <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    .gridlines line {
+      stroke: lightgray;
+    }
+
+    .gridlines .domain {
+      stroke: none;
+    }
+
+    .legend span {
+            margin-right: 15px;
+        }
+
+
+    #linechartLegend {
+            margin-left: 250px;
+            margin-top: 5px;
+        }
+  </style>
   <div id="my_dataviz"></div>
 </head>
 
-
 <body>
+  <svg id="chart3" height="500" width="800"></svg>
+  <div id="linechartLegend" class="legend"> </div>
   <script>
 
     //chart 1
@@ -251,6 +271,213 @@
     });
 
     //chart 3
+    d3.csv("chart3data.csv", d3.autoType())
+      .then((data) => {
+
+        const svg = d3.select("svg#chart3");
+                    const width = svg.attr("width");
+                    const height = svg.attr("height");
+        console.log(data);
+        const margin = { top: 10, right: 20, bottom: 50, left: 50 };
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
+
+        //data cleaning
+        data.forEach((d, i) => {
+          d['count'] = Number(d['count']);
+          d['year'] = Number(d['year']);
+        });
+
+        let annotations = svg.append("g").attr("id", "annotations");
+        let chartArea = svg.append("g").attr("id", "points")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        //scales and extents
+        const countExtent = d3.extent(data, d => d['count']);
+        const countScale = d3.scaleLinear().domain([0, countExtent[1]]).range([chartHeight, 0])
+
+        // const yearExtent = d3.extent(data, d => d['year']);
+        // const yearScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth]);
+        const yearMap = d3.map(data, d => d["year"]);
+        const yearScale = d3.scalePoint().domain(yearMap).range([0, chartWidth])
+          .padding(0.05);
+
+        const genreScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+        //x axis
+        let bottomAxis = d3.axisBottom(yearScale)
+          .ticks(6)
+        let bottomGridlines = d3.axisBottom(yearScale)
+          .ticks(6)
+          .tickSize(-chartHeight - 10)
+          .tickFormat('')
+        annotations.append("g")
+          .attr("class", "x axis")
+          .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+          .call(bottomAxis);
+        annotations.append("g")
+          .attr("class", "x gridlines")
+          .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+          .call(bottomGridlines);
+
+        //y axis
+        let leftAxis = d3.axisLeft(countScale)
+          .ticks(7)
+        let leftGridlines = d3.axisLeft(countScale)
+          .ticks(7)
+          .tickSize(-chartWidth - 10)
+          .tickFormat("")
+        annotations.append("g")
+          .attr("class", "y axis")
+          .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+          .call(leftAxis)
+        annotations.append("g")
+          .attr("class", "y gridlines")
+          .attr("transform", `translate(${margin.left - 10},${margin.top})`)
+          .call(leftGridlines);
+
+        //grouped data
+        var groupedData = d3.group(data, d => d.genre)
+        console.log(groupedData);
+        console.log(groupedData.get("adult standards"));
+
+
+        var adultstandards_data = groupedData.get("adult standards");
+        var pop_data = groupedData.get("pop");
+        var rock_data = groupedData.get("rock");
+        var electronic_data = groupedData.get("electronic");
+        // console.log(adultstandards_data)
+
+        //line generator
+        var lineGen = d3.line()
+          .x(d => yearScale(d['year']))
+          .y(d => countScale(d['count']))
+          .curve(d3.curveMonotoneX);
+
+        // draw lines
+        chartArea.append("path")
+          .datum(adultstandards_data)
+          .attr("id", "path_adultstandards")
+          .attr("class", "line")
+          .attr("fill", "none")
+          .attr("stroke", "#aec7e8")
+          .attr("stroke-width", 3)
+          .attr("d", lineGen);
+
+        chartArea.append("path")
+          .attr("id", "path_pop")
+          .datum(pop_data)
+          .attr("class", "line")
+          .attr("fill", "none")
+          .attr("stroke", "#ffbb78")
+          .attr("stroke-width", 3)
+          .attr("d", lineGen);
+
+        chartArea.append("path")
+          .attr("id", "path_rock")
+          .datum(rock_data)
+          .attr("class", "line")
+          .attr("fill", "none")
+          .attr("stroke", "#98df8a")
+          .attr("stroke-width", 3)
+          .attr("d", lineGen);
+
+        chartArea.append("path")
+          .attr("id", "path_electronic")
+          .datum(electronic_data)
+          .attr("class", "line")
+          .attr("fill", "none")
+          .attr("stroke", "#ff9896")
+          .attr("stroke-width", 3)
+          .attr("d", lineGen);
+
+        //add circles
+        chartArea.selectAll("circle#path_adultstandards").data(adultstandards_data)
+          .join("circle")
+          .attr("r", 3)
+          .attr("fill", "#1f77b4")
+          .attr("cx", d => yearScale(d['year']))
+          .attr("cy", d => countScale(d['count']));
+
+        chartArea.selectAll("circle#path_pop").data(pop_data)
+          .join("circle")
+          .attr("r", 3)
+          .attr("fill", "#ff7f0e")
+          .attr("cx", d => yearScale(d['year']))
+          .attr("cy", d => countScale(d['count']));
+
+        chartArea.selectAll("circle#path_rock").data(rock_data)
+          .join("circle")
+          .attr("r", 3)
+          .attr("fill", "#2ca02c")
+          .attr("cx", d => yearScale(d['year']))
+          .attr("cy", d => countScale(d['count']));
+
+        chartArea.selectAll("circle#path_electronic").data(electronic_data)
+          .join("circle")
+          .attr("r", 3)
+          .attr("fill", "#d62728")
+          .attr("cx", d => yearScale(d['year']))
+          .attr("cy", d => countScale(d['count']));
+
+        //chart title
+        svg.append("text")
+          .attr("x", width / 2)
+          .attr("y", 20)
+          .style("text-anchor", "middle")
+          .style("font-family", "Impact")
+          .style("font-size", 20)
+          .text("SONG GENRES BY DECADE");
+
+        //x axis labels
+        svg.append("text")
+          .attr("x", width / 2)
+          .attr("y", height)
+          .style("text-anchor", "middle")
+          .style("font-family", "Trebuchet MS")
+          .style("font-size", 14)
+          .text("Decade");
+
+        //y axis label
+        svg.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0)
+          .attr("x", 0 - (height / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .style("font-family", "Trebuchet MS")
+          .style("font-size", 14)
+          .text("Song Count");
+
+        //legend
+        d3.select("#linechartLegend")
+          .append("span")
+          .text("Adult Standards")
+          .style("color", "#1f77b4")
+          .style("font-family", "Trebuchet MS")
+          .style("font-size", 14);
+
+          d3.select("#linechartLegend")
+          .append("span")
+          .text("Pop")
+          .style("color", "#ff7f0e")
+          .style("font-family", "Trebuchet MS")
+          .style("font-size", 14);
+
+          d3.select("#linechartLegend")
+          .append("span")
+          .text("Rock")
+          .style("color", "#2ca02c")
+          .style("font-family", "Trebuchet MS")
+          .style("font-size", 14);
+
+          d3.select("#linechartLegend")
+          .append("span")
+          .text("Electronic")
+          .style("color", "#d62728")
+          .style("font-family", "Trebuchet MS")
+          .style("font-size", 14);
+      });
   </script>
 
 </body>
