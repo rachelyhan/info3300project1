@@ -55,7 +55,7 @@
 
       // const ageExtent = d3.extent(data, d => d['artist age']);
       // const ageExtent = (10, 70);
-      const ageScale = d3.scaleLinear().domain([10, 70]).range([chartHeight, 0])
+      const ageScale = d3.scaleLinear().domain([0, 70]).range([chartHeight, 0])
       let leftAxis = d3.axisLeft(ageScale).tickFormat(d3.format(''));
       let leftGridlines = d3.axisLeft(ageScale)
         .tickSize(-chartWidth - 10)
@@ -71,8 +71,7 @@
         .call(leftGridlines);
 
       const decades = d3.map(data, d => d["decade"]);
-      const decadesScale = d3.scalePoint().domain(decades).range([0, chartWidth])
-        .padding(0.05);
+      const decadesScale = d3.scalePoint().domain(decades).range([30, chartWidth - 30]);
 
       let bottomAxis = d3.axisBottom(decadesScale)
       let bottomAxisG = annotations.append("g")
@@ -178,8 +177,8 @@
       //draw lower horizontal lines for whiskers
       years.forEach((d, i) => {
         chartArea.append("line")
-          .attr("x1", decadesScale(d) - 15)
-          .attr("x2", decadesScale(d) + 15)
+          .attr("x1", decadesScale(d) - 22)
+          .attr("x2", decadesScale(d) + 22)
           .attr("y1", ageScale(whiskers[i]["lower"]))
           .attr("y2", ageScale(whiskers[i]["lower"]))
           .style("stroke", "black")
@@ -194,7 +193,7 @@
           .attr("y1", ageScale(q1q3[i]["q3"]))
           .attr("y2", ageScale(q1q3[i]["q1"]))
           .style("stroke", "#1DB954")
-          .style("stroke-width", 30);
+          .style("stroke-width", 44);
       });
 
       //draw outliers
@@ -253,8 +252,7 @@
         .call(leftGridlines);
 
       const genres = d3.map(data, d => d["altered genre"]);
-      const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth])
-        .padding(0.05);
+      const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth]);
 
       let bottomAxis = d3.axisBottom(genreScale)
       let bottomAxisG = annotations.append("g")
@@ -302,8 +300,7 @@
         // const yearExtent = d3.extent(data, d => d['year']);
         // const yearScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth]);
         const yearMap = d3.map(data, d => d["year"]);
-        const yearScale = d3.scalePoint().domain(yearMap).range([0, chartWidth])
-          .padding(0.05);
+        const yearScale = d3.scalePoint().domain(yearMap).range([0, chartWidth]);
 
         const genreScale = d3.scaleOrdinal(d3.schemeCategory10);
 
