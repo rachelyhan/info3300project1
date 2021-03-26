@@ -193,7 +193,7 @@
           .attr("x2", decadesScale(d))
           .attr("y1", ageScale(q1q3[i]["q3"]))
           .attr("y2", ageScale(q1q3[i]["q1"]))
-          .style("stroke", "darkblue")
+          .style("stroke", "#1DB954")
           .style("stroke-width", 30);
       });
 
@@ -203,7 +203,7 @@
           .attr("cx", decadesScale(d["year"]))
           .attr("cy", ageScale(d["age"]))
           .attr("r", 3)
-          .style("fill", d => "darkblue")
+          .style("fill", d => "#1DB954")
       })
     });
 
@@ -412,7 +412,7 @@
         chartArea.selectAll("circle#path_rock").data(rock_data)
           .join("circle")
           .attr("r", 3)
-          .attr("fill", "#2ca02c")
+          .attr("fill", "#1DB954")
           .attr("cx", d => yearScale(d['year']))
           .attr("cy", d => countScale(d['count']));
 
@@ -470,7 +470,7 @@
         d3.select("#linechartLegend")
           .append("span")
           .text("Rock")
-          .style("color", "#2ca02c")
+          .style("color", "#1DB954")
           .style("font-family", "Trebuchet MS")
           .style("font-size", 14);
 
