@@ -6,13 +6,6 @@
   <title></title>
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <style>
-    /* @font-face {
-      font-family: 'Proxima Nova';
-      src: url('ProximaNova.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    } */
-
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap');
 
     .gridlines line {
@@ -48,10 +41,10 @@
 
 <body>
   <svg id="chart1" height="500" width="800"></svg>
+  <svg id="chart2" height="500" width="800"></svg>
   <svg id="chart3" height="500" width="800"></svg>
   <div id="linechartLegend" class="legend"> </div>
   <script>
-
 
     //chart 1
     d3.csv("all.csv").then((data) => {
@@ -227,26 +220,17 @@
       })
     });
 
-
-
-
-
-
-
     //chart 2
     d3.csv("all.csv").then((data) => {
       console.log(data);
 
-      const width = 1000;
+      const width = 800;
       const height = 500;
-      const margin = { "top": 10, "right": 10, "bottom": 40, "left": 60 };
+      const margin = { "top": 10, "right": 10, "bottom": 100, "left": 60 };
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom
 
-      var svg = d3.select("body")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+      var svg = d3.select('#chart2')
 
       data.forEach((d, i) => {
         d['artist age'] = Number(d['artist age']);
@@ -257,7 +241,7 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       const ageExtent = d3.extent(data, d => d['artist age']);
-      const ageScale = d3.scaleLinear().domain(ageExtent).range([chartHeight, 0])
+      const ageScale = d3.scaleLog().domain(ageExtent).range([chartHeight, 0])
       let leftAxis = d3.axisLeft(ageScale).tickFormat(d3.format(''));
       let leftGridlines = d3.axisLeft(ageScale)
         .tickSize(-chartWidth - 10)
@@ -272,25 +256,28 @@
         .attr("transform", `translate(${margin.left - 10},${margin.top})`)
         .call(leftGridlines);
 
-      const genres = d3.map(data, d => d["altered genre"]);
+      var genres = d3.map(data, d => d["altered genre"]);
+      genres.sort( (a,b) => d3.ascending(a,b) )
       const genreScale = d3.scalePoint().domain(genres).range([0, chartWidth]);
 
       let bottomAxis = d3.axisBottom(genreScale)
       let bottomAxisG = annotations.append("g")
-      .style("font", "14px Montserrat")
-        .attr("class", "x axis")
-        .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
-        .call(bottomAxis);
+                                  .style("font", "14px Montserrat")
+                                    .attr("class", "x axis")
+                                    .attr("transform", `translate(${margin.left},${chartHeight + margin.top + 10})`)
+                                    .call(bottomAxis)
+                                  .selectAll("text")
+                                    .attr("transform", "rotate(45)")
+                                    .style("text-anchor", "start");
 
-      // console.log(genres)
-      let circles = chartArea.selectAll("circle").data(data)
-        .join("circle")
-        .attr("cy", d => ageScale(d['artist age']))
-        .attr("cx", d => genreScale(d['altered genre']))
-        .attr("r", d => 3)
+      let boxes = chartArea.selectAll("rect").data(data)
+        .join("rect")
+        .attr("y", d => ageScale(d['artist age']) - 3)
+        .attr("x", d => genreScale(d['altered genre']) - 9)
+        .attr("width", d => 18)
+        .attr("height", d => 6)
         .attr("opacity", 0.3)
-        .style("fill", d => "darkblue")
-
+        .style("fill", d => "#1DB954")
     });
 
     //chart 3
