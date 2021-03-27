@@ -22,7 +22,7 @@
 
 
     #linechartLegend {
-      margin-left: 100px;
+      text-align: center
     }
 
     body {
@@ -35,14 +35,25 @@
       margin-top: 25px;
       margin-bottom: 25px;
     }
+
+    h1 {
+      text-align: center
+    }
+
+    #all_svgs{
+      text-align: center;
+    }
   </style>
 </head>
 
 <body>
-  <svg id="chart1" height="300" width="500"></svg>
-  <svg id="chart2" height="300" width="500"></svg>
-  <svg id="chart3" height="300" width="500"></svg>
+  <h1>Spotify's Top Songs Through the Decades by Age and Genre</h1>
+  <div id="all_svgs">
+  <svg id="chart1" height="500" width="800"></svg>
+  <svg id="chart2" height="500" width="800"></svg>
+  <svg id="chart3" height="500" width="800"></svg>
   <div id="linechartLegend" class="legend"> </div>
+  </div>
   <script>
 
     //chart 1
