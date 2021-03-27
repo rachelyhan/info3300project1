@@ -39,9 +39,9 @@
 </head>
 
 <body>
-  <svg id="chart1" height="500" width="800"></svg>
-  <svg id="chart2" height="500" width="800"></svg>
-  <svg id="chart3" height="500" width="800"></svg>
+  <svg id="chart1" height="300" width="500"></svg>
+  <svg id="chart2" height="300" width="500"></svg>
+  <svg id="chart3" height="300" width="500"></svg>
   <div id="linechartLegend" class="legend"> </div>
   <script>
 
@@ -222,14 +222,13 @@
 
     //chart 2
     d3.csv("all.csv").then((data) => {
-
-      const width = 800;
-      const height = 500;
+      const svg = d3.select("svg#chart2");
+      const width = svg.attr("width");
+      const height = svg.attr("height");
       const margin = { "top": 40, "right": 20, "bottom": 100, "left": 60 };
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom
 
-      var svg = d3.select('#chart2')
 
       data.forEach((d, i) => {
         d['artist age'] = Number(d['artist age']);
