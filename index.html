@@ -23,7 +23,6 @@
 
     #linechartLegend {
       margin-left: 250px;
-      margin-top: 5px;
     }
 
     body {
@@ -33,8 +32,8 @@
     }
 
     svg {
-      margin-top: 50px;
-      margin-bottom: 50px;
+      margin-top: 25px;
+      margin-bottom: 25px;
     }
   </style>
 </head>
@@ -53,7 +52,7 @@
         const svg = d3.select("svg#chart1");
         const width = svg.attr("width");
         const height = svg.attr("height");
-        const margin = { "top": 30, "right": 10, "bottom": 50, "left": 60 };
+        const margin = { "top": 40, "right": 10, "bottom": 50, "left": 60 };
         const chartWidth = width - margin.left - margin.right;
         const chartHeight = height - margin.top - margin.bottom
 
@@ -95,13 +94,16 @@
           .attr("x", width / 2)
           .attr("y", 20)
           .style("text-anchor", "middle")
-          .text("Artist Age vs Decades");
+          .style("font-weight", 600)
+          .style("font-size", "16px")
+          .text("ARTIST AGE BY DECADE");
 
         //x axis labels
         svg.append("text")
           .attr("x", width / 2)
           .attr("y", height)
           .style("text-anchor", "middle")
+          .style("font-weight", 600)
           .text("Decade");
 
         //y axis label
@@ -111,6 +113,7 @@
        .attr("x", 0 - (height / 2))
           .attr("dy", "1em")
           .style("text-anchor", "middle")
+          .style("font-weight", 600)
           .text("Artist Age");
 
 
@@ -224,7 +227,7 @@
 
     const width = 800;
     const height = 500;
-    const margin = { "top": 10, "right": 20, "bottom": 100, "left": 60 };
+    const margin = { "top": 40, "right": 20, "bottom": 100, "left": 60 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom
 
@@ -291,6 +294,7 @@
       .attr("y", 20)
       .style("text-anchor", "middle")
       .style("font-weight", 600)
+      .style("font-size", "16px")
       .text("ARTIST AGE BY SONG GENRE");
 
     //x axis labels
@@ -298,6 +302,7 @@
       .attr("x", width / 2 + margin.left/2)
       .attr("y", height)
       .style("text-anchor", "middle")
+      .style("font-weight", 600)
       .text("Genre");
 
     //y axis label
@@ -307,6 +312,7 @@
       .attr("x", 0 - (height / 2) + 50)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
+      .style("font-weight", 600)
       .text("Artist Age");
   });
 
@@ -318,7 +324,7 @@
         const width = svg.attr("width");
         const height = svg.attr("height");
         console.log(data);
-        const margin = { top: 10, right: 20, bottom: 50, left: 50 };
+        const margin = { top: 40, right: 10, bottom: 50, left: 60 };
         const chartWidth = width - margin.left - margin.right;
         const chartHeight = height - margin.top - margin.bottom;
 
@@ -336,8 +342,6 @@
         const countExtent = d3.extent(data, d => d['count']);
         const countScale = d3.scaleLinear().domain([0, countExtent[1]]).range([chartHeight, 0])
 
-        // const yearExtent = d3.extent(data, d => d['year']);
-        // const yearScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth]);
         const yearMap = d3.map(data, d => d["year"]);
         const yearScale = d3.scalePoint().domain(yearMap).range([0, chartWidth]);
 
@@ -387,7 +391,6 @@
         var pop_data = groupedData.get("pop");
         var rock_data = groupedData.get("rock");
         var electronic_data = groupedData.get("electronic");
-        // console.log(adultstandards_data)
 
         //line generator
         var lineGen = d3.line()
@@ -410,7 +413,7 @@
           .datum(pop_data)
           .attr("class", "line")
           .attr("fill", "none")
-          .attr("stroke", "#ffbb78")
+          .attr("stroke", "#98df8a")
           .attr("stroke-width", 3)
           .attr("d", lineGen);
 
@@ -419,7 +422,7 @@
           .datum(rock_data)
           .attr("class", "line")
           .attr("fill", "none")
-          .attr("stroke", "#98df8a")
+          .attr("stroke", "#ffbb78")
           .attr("stroke-width", 3)
           .attr("d", lineGen);
 
@@ -443,14 +446,14 @@
         chartArea.selectAll("circle#path_pop").data(pop_data)
           .join("circle")
           .attr("r", 3)
-          .attr("fill", "#ff7f0e")
+          .attr("fill", "#1DB954")
           .attr("cx", d => yearScale(d['year']))
           .attr("cy", d => countScale(d['count']));
 
         chartArea.selectAll("circle#path_rock").data(rock_data)
           .join("circle")
           .attr("r", 3)
-          .attr("fill", "#1DB954")
+          .attr("fill", "#ff7f0e")
           .attr("cx", d => yearScale(d['year']))
           .attr("cy", d => countScale(d['count']));
 
@@ -466,8 +469,8 @@
           .attr("x", width / 2)
           .attr("y", 20)
           .style("text-anchor", "middle")
-          // .style("font-family", "Impact")
-          // .style("font-size", 20)
+          .style("font-weight", 600)
+          .style("font-size", "16px")
           .text("SONG GENRES BY DECADE");
 
         //x axis labels
@@ -475,8 +478,7 @@
           .attr("x", width / 2)
           .attr("y", height)
           .style("text-anchor", "middle")
-          // .style("font-family", "Trebuchet MS")
-          // .style("font-size", 14)
+          .style("font-weight", 600)
           .text("Decade");
 
         //y axis label
@@ -486,8 +488,7 @@
           .attr("x", 0 - (height / 2))
           .attr("dy", "1em")
           .style("text-anchor", "middle")
-          // .style("font-family", "Trebuchet MS")
-          // .style("font-size", 14)
+          .style("font-weight", 600)
           .text("Song Count");
 
         //legend
@@ -495,29 +496,26 @@
           .append("span")
           .text("Adult Standards")
           .style("color", "#1f77b4")
-          .style("font-family", "Trebuchet MS")
-          .style("font-size", 14);
+          .style("font-weight", 600)
 
         d3.select("#linechartLegend")
           .append("span")
           .text("Pop")
-          .style("color", "#ff7f0e")
-          .style("font-family", "Trebuchet MS")
-          .style("font-size", 14);
+          .style("color", "#1DB954")
+          .style("font-weight", 600)
 
         d3.select("#linechartLegend")
           .append("span")
           .text("Rock")
-          .style("color", "#1DB954")
-          .style("font-family", "Trebuchet MS")
-          .style("font-size", 14);
+          .style("color", "#ff7f0e")
+          .style("font-weight", 600)
+          
 
         d3.select("#linechartLegend")
           .append("span")
           .text("Electronic")
           .style("color", "#d62728")
-          .style("font-family", "Trebuchet MS")
-          .style("font-size", 14);
+          .style("font-weight", 600)
       });
   </script>
 </body>
